@@ -3,5 +3,5 @@ project(Project1)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES nfa2dfa.cpp)
 add_executable(Project1 ${SOURCE_FILES})
