@@ -10,11 +10,15 @@
 #include <cstdio>
 #include <cstdlib>
 #include <set>
+#include <unordered_set>
 #include <map>
 #include <string>
 #include <sstream>
 
 using namespace std;
+
+string SetToString(set<int> &s);
+void StringToSet(set<int> &s, const string &setStr);
 
 struct FA {
     int initState;
@@ -23,42 +27,96 @@ struct FA {
     vector < map < char, set <int> > > transTable;
 };
 
-string SetToString(set<int> &s);
-void StringToSet(set<int> &s, const string &setStr);
-void ParseNFA(FA &nfa);
-void ConstructEclosure( FA & nfa , vector < set <int> > & eClosure );
-void closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet);
+class nfa2dfa{
+    private:
+        FA nfa, dfa;
+        vector < set <int> > Dstates;
+        vector < char > symbols;
+    public:
+        void ParseNFA();
+        set<int> ConstructEclosure( const set <int> &states );
+        set<int> ConstructEclosure( int state );
+        void closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet);
+        set<int> move(set<int> & T, char symbol);
+        void constructSubset();
+};
 
 int main(){
 
-    FA nfa;
-    vector < set <int> > eClosure;
+    nfa2dfa nd;
+    nd.ParseNFA();
+    nd.constructSubset();
 
-    ParseNFA(nfa);
-    eClosure.resize(nfa.numOfStates);
-    ConstructEclosure(nfa, eClosure);
-    
-    for (set <int> s : eClosure){
-        cout << SetToString(s) << endl;
-    }
     return 0;
 }
+/** Constructing set of states for DFA **/
+void nfa2dfa::constructSubset(){
+    int i, j;
+    set <int> U;
+    unordered_set < string > trackingSets;
 
-/** Construction of e-closure(s) set **/
-void ConstructEclosure( FA & nfa , vector < set <int> > & eClosure ) {
-    int i;
-    map < char, set <int> >::iterator mit;
+    i = 0;
+    //adding start state to Dstates
+    Dstates.push_back(ConstructEclosure(nfa.initState - 1));
+    trackingSets.insert( SetToString(Dstates[0]));
 
-    /** For each NFA state we look if it has any 'E' transitions,
-     *  and if yes, we create E-closure set for that state
-     */
-    for (i = 0; i < nfa.numOfStates; i++){
-        closureHelper(nfa.transTable, i, eClosure[i]);
+    set <int> b;
+    while( i != Dstates.size() ){
+        for ( j = 0; j < symbols.size()-1; j++){
+            U = ConstructEclosure( move( Dstates[i],symbols[j]) );
+            string s = SetToString(U);
+
+            if ( trackingSets.find(s) == trackingSets.end() ) {
+                Dstates.push_back(U);
+                trackingSets.insert(s);
+            }
+            cout << SetToString(Dstates[i]) << endl;
+            cout << symbols[j] << " : "<< SetToString(U) << endl <<endl;
+        }
+        i++;
     }
+}
+
+/** Creating a set of NFA states to which there is a transition on
+ *  a given symbol (e.g. 'a' or 'b') from some state s in T **/
+set<int> nfa2dfa::move(set <int> & T, char symbol){
+    set <int> fromT;
+    map < char, set <int> >::iterator mit;
+    for (int i : T) {
+        mit = nfa.transTable[i-1].find(symbol);
+
+        //insert all possible transitions for each state to a new set
+        if ( mit != nfa.transTable[i-1].end() ) {
+            fromT.insert(mit->second.begin(), mit->second.end());
+        }
+    }
+    return fromT;
+}
+
+/** Construction of e-closure() for set of states **/
+set<int> nfa2dfa::ConstructEclosure( const set <int> &states ) {
+
+    set <int> eClosure;
+    /** For each state we create an eClosure, and then do union of closures **/
+    for (int i : states){
+        set <int> subSet;
+        closureHelper(nfa.transTable, i-1, subSet);
+        //TODO: refactor here
+        eClosure.insert(subSet.begin(), subSet.end());
+    }
+    return eClosure;
+}
+
+/** Construction of e-closure() for one state **/
+set<int> nfa2dfa::ConstructEclosure( int state ) {
+    set <int> eClosure;
+    closureHelper(nfa.transTable, state, eClosure);
+
+    return eClosure;
 }
 
 /** Recursive helper function for e-closure(s) construction **/
-void closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet) {
+void nfa2dfa::closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet) {
     map < char, set <int> >::iterator mit;
 
     // add states reachable through e transition
@@ -102,13 +160,12 @@ string SetToString(set<int> &s) {
 }
 
 /** Parsing NFA from stdin **/
-void ParseNFA(FA &nfa) {
+void nfa2dfa::ParseNFA() {
     string line, token;
     bool isSymbols;
     int i, j;
     char setOfStates[10000];
     istringstream row;
-    vector < char > symbols;
 
     /** Start scanning:
      *  Parse inittial state, final states, and number of states first.
@@ -116,6 +173,8 @@ void ParseNFA(FA &nfa) {
      *      If starts with "State", we save language symbols
      *      Else we parse set of states for that transition
      */
+
+    cout << "reading nfa...";
     while(getline(cin,line)){
         if (line.length() == 0) break;
         if ( sscanf(line.c_str(), "Initial State: %d", &nfa.initState) == 1 ) {
@@ -149,4 +208,5 @@ void ParseNFA(FA &nfa) {
             }
         }
     }
+    cout << "done." << endl;
 }
