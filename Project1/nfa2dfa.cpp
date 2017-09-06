@@ -10,26 +10,71 @@
 #include <cstdio>
 #include <cstdlib>
 #include <set>
+#include <map>
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-struct NFA {
+struct FA {
     int initState;
     set <int> finalStates;
     int numOfStates;
-    vector < char > symbols;
-    vector < vector < set <int> > > transTable;
+    vector < map < char, set <int> > > transTable;
 };
 
-void printSet(set <int> & s) {
-    cout << "{";
-    for (int i : s)
-        cout << i << ",";
-    cout << "}";
+string SetToString(set<int> &s);
+void StringToSet(set<int> &s, const string &setStr);
+void ParseNFA(FA &nfa);
+void ConstructEclosure( FA & nfa , vector < set <int> > & eClosure );
+void closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet);
+
+int main(){
+
+    FA nfa;
+    vector < set <int> > eClosure;
+
+    ParseNFA(nfa);
+    eClosure.resize(nfa.numOfStates);
+    ConstructEclosure(nfa, eClosure);
+    
+    for (set <int> s : eClosure){
+        cout << SetToString(s) << endl;
+    }
+    return 0;
 }
-void parseSet( set <int> & s, const string & setStr ) {
+
+/** Construction of e-closure(s) set **/
+void ConstructEclosure( FA & nfa , vector < set <int> > & eClosure ) {
+    int i;
+    map < char, set <int> >::iterator mit;
+
+    /** For each NFA state we look if it has any 'E' transitions,
+     *  and if yes, we create E-closure set for that state
+     */
+    for (i = 0; i < nfa.numOfStates; i++){
+        closureHelper(nfa.transTable, i, eClosure[i]);
+    }
+}
+
+/** Recursive helper function for e-closure(s) construction **/
+void closureHelper( vector < map <char, set <int> > > & tTable, int state, set <int> & eClosureSet) {
+    map < char, set <int> >::iterator mit;
+
+    // add states reachable through e transition
+    eClosureSet.insert(state+1);
+
+    mit = tTable[state].find('E');
+    if ( mit == tTable[state].end() ) return;
+
+    // see if we can have further 'E' transitions through found set
+    for (int i : mit->second) {
+        closureHelper(tTable, --i, eClosureSet);
+    }
+}
+
+/** parseSet takes a string in a form of "{x1,x2,...xn}" and parses it into a set **/
+void StringToSet(set <int> &s, const string &setStr) {
     string stateNum;
     int i;
     for ( i = 1; i < setStr.length(); i++) {
@@ -41,22 +86,42 @@ void parseSet( set <int> & s, const string & setStr ) {
     }
 }
 
-void parseNFA( NFA & nfa) {
+/** Construct a string of "{x1,x2,...xn}" from form set **/
+string SetToString(set<int> &s) {
+    ostringstream os;
+
+    os << "{";
+    for (int i : s) {
+        os << i ;
+        // don't print comma after last element
+        if (i != *s.rbegin()) os << ",";
+    }
+    os << "}";
+
+    return os.str();
+}
+
+/** Parsing NFA from stdin **/
+void ParseNFA(FA &nfa) {
     string line, token;
-    char setOfStates[10000];
-    istringstream row;
     bool isSymbols;
     int i, j;
+    char setOfStates[10000];
+    istringstream row;
+    vector < char > symbols;
 
-    isSymbols = false;
-
+    /** Start scanning:
+     *  Parse inittial state, final states, and number of states first.
+     *  After that, scan transition table line by line:
+     *      If starts with "State", we save language symbols
+     *      Else we parse set of states for that transition
+     */
     while(getline(cin,line)){
+        if (line.length() == 0) break;
         if ( sscanf(line.c_str(), "Initial State: %d", &nfa.initState) == 1 ) {
-//            cout << nfa.initState << endl;
+            // just scanning here
         }else if ( sscanf(line.c_str(), "Final States: %s", setOfStates) == 1 ) {
-            parseSet(nfa.finalStates, string(setOfStates) );
-//            printSet(nfa.finalStates);
-
+            StringToSet(nfa.finalStates, string(setOfStates));
         } else if ( sscanf(line.c_str(), "Total States: %d", &nfa.numOfStates) == 1 ) {
             nfa.transTable.resize(nfa.numOfStates);
         } else{
@@ -72,52 +137,16 @@ void parseNFA( NFA & nfa) {
             }
 
             j = 0;
-
             while (row >> token) {
-
-                if (isSymbols) nfa.symbols.push_back(token[0]);
-                else {
-                    parseSet(nfa.transTable[i][j], token);
+                if (isSymbols) {
+                    symbols.push_back(token[0]);
+                } else {
+                    if (token.size() > 2) {
+                        StringToSet(nfa.transTable[i][symbols[j]], token);
+                    }
                     j++;
                 }
             }
-
-            if (isSymbols) {
-                for (j = 0; j < nfa.transTable.size(); j++){
-                    nfa.transTable[j].resize(nfa.symbols.size());
-                }
-            }
         }
     }
-
-}
-
-void printNFA(NFA & n){
-
-    cout << "Init state: " << n.initState << endl;
-    cout << "Fin states: " ;
-    printSet(n.finalStates);
-    cout << endl << "Tot states: " << n.numOfStates <<endl;
-
-    cout << "State " ;
-    for (int i = 0; i < n.symbols.size(); i++) cout << n.symbols[i]<< " ";
-    cout <<endl;
-
-    for (int i = 0; i < n.transTable.size(); i++){
-        cout << i+1 << " ";
-        for (int j = 0; j < n.transTable[0].size(); j++){
-            printSet(n.transTable[i][j]);
-            cout << " ";
-        }
-        cout << endl;
-    }
-}
-
-int main(){
-
-    NFA nfa;
-
-    parseNFA(nfa);
-    printNFA(nfa);
-    return 0;
 }
