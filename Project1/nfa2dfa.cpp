@@ -10,7 +10,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <set>
-#include <unordered_set>
+#include <unordered_map>
 #include <map>
 #include <string>
 #include <sstream>
@@ -67,7 +67,7 @@ void nfa2dfa::printFA(bool option){
         for (int j =0; j <dfa.numOfStates; j++) {
             printf("%-7d ", j+1);
             for (int i = 0; i < symbols.size() - 1; i++) {
-                printf("%-12s",SetToString(dfa.transTable[j][symbols[j]]).c_str());
+                printf("%-12s",SetToString(dfa.transTable[j][symbols[i]]).c_str());
             }
             printf("\n");
         }
@@ -79,7 +79,7 @@ void nfa2dfa::constructSubset(){
     string s;
     set <int> U;
     bool isFinal;
-    unordered_set < string > trackingSets;
+    unordered_map < string, int > trackingSets;
 
     i = 0;
     size = 1;
@@ -87,7 +87,7 @@ void nfa2dfa::constructSubset(){
     isFinal = false;
     Dstates.push_back( ConstructEclosure(nfa.initState - 1, isFinal) );
     s = SetToString(Dstates[0]);
-    trackingSets.insert( s );
+    trackingSets.insert( make_pair(s,1) );
 
     cout << "creating corresponding DFA ..." << endl;
     printf("new DFA state:  1    -->  %s\n", s.c_str());
@@ -104,18 +104,20 @@ void nfa2dfa::constructSubset(){
 
             if ( trackingSets.find(s) == trackingSets.end() && s.length() != 2 /*"{}"*/) {
                 Dstates.push_back(U);
-                trackingSets.insert(s);
-
+                
                 printf("new DFA state:  %d    -->  %s\n", ++size, s.c_str());
-                ttable[symbols[j]].insert(size);
+                trackingSets.insert( make_pair(s, size) );
                 if (isFinal) dfa.finalStates.insert(size);
             }
+            if (s.size() != 2)
+            printf("State %s goes to %d on %c\n", SetToString( Dstates[i] ).c_str(), trackingSets.find(s)->second, symbols[j] );
+            if (s.size() != 2) ttable[symbols[j]].insert( trackingSets.find(s)->second );
         }
         dfa.transTable.push_back(ttable);
         i++;
     }
     dfa.numOfStates = Dstates.size();
-    cout << "done."<< endl;
+    cout << "done."<< endl << endl;
 }
 
 /** Creating a set of NFA states to which there is a transition on
