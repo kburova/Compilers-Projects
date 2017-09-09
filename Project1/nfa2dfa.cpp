@@ -110,7 +110,7 @@ void nfa2dfa::constructSubset(){
                 if (isFinal) dfa.finalStates.insert(size);
             }
             if (s.size() != 2)
-            printf("State %s goes to %d on %c\n", SetToString( Dstates[i] ).c_str(), trackingSets.find(s)->second, symbols[j] );
+//            printf("State %s goes to %d on %c\n", SetToString( Dstates[i] ).c_str(), trackingSets.find(s)->second, symbols[j] );
             if (s.size() != 2) ttable[symbols[j]].insert( trackingSets.find(s)->second );
         }
         dfa.transTable.push_back(ttable);
@@ -163,11 +163,12 @@ void nfa2dfa::closureHelper( vector < map <char, set <int> > > & tTable, int sta
     map < char, set <int> >::iterator mit;
 
     // add states reachable through e transition
-    eClosureSet.insert(state+1);
     if ( nfa.finalStates.find(state+1) != nfa.finalStates.end()) isFinal = true;
+    if (eClosureSet.find(state+1) != eClosureSet.end()) return;
+    eClosureSet.insert(state+1);
 
     mit = tTable[state].find('E');
-    if ( mit == tTable[state].end() ) return;
+    if ( mit == tTable[state].end()) return;
 
     // see if we can have further 'E' transitions through found set
     for (int i : mit->second) {
@@ -218,7 +219,7 @@ void nfa2dfa::ParseNFA() {
      *      Else we parse set of states for that transition
      */
 
-    cout << "reading nfa...";
+    //cout << "reading nfa...";
     while(getline(cin,line)){
         if (line.length() == 0) break;
         if ( sscanf(line.c_str(), "Initial State: %d", &nfa.initState) == 1 ) {
