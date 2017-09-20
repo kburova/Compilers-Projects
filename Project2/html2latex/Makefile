@@ -22,7 +22,7 @@ html2latex: html2latex.lex.o
 %.pdf: %.tex
 	pdflatex $<
 
-test: html2latex test.pdf
+test: html2latex test2.pdf
 
 clean:
 	$(RM) *.o
@@ -30,4 +30,4 @@ clean:
 	$(RM) *.tex *.log *.aux *.pdf
 	$(RM) html2latex
 
-.PHONY: clean all test
+#.PHONY: clean all test

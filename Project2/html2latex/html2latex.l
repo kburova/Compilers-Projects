@@ -18,7 +18,142 @@ int list_type;
      * title can be formatted in LateX.
      *************************************************************************/
     yytext[yyleng-5] = 0;
-    printf( "\\section{%s}", yytext+4 );
+    printf( "\\section{%s}\n", yytext+4 );
+}
+"<h2>"[^<]*"</h2>" {
+    /**************************************************************************
+     * Matched an HTML H2 header so print it out as a LateX section title.
+     * The beginning and ending tags need to be stripped off before the
+     * title can be formatted in LateX.
+     *************************************************************************/
+    yytext[yyleng-5] = 0;
+    printf( "\\subsection{%s}\n", yytext+4 );
+}
+"<h3>"[^<]*"</h3>" {
+    /**************************************************************************
+     * Matched an HTML H3 header so print it out as a LateX section title.
+     * The beginning and ending tags need to be stripped off before the
+     * title can be formatted in LateX.
+     *************************************************************************/
+    yytext[yyleng-5] = 0;
+    printf( "\\subsubsection{%s}\n", yytext+4 );
+}
+
+"<pre>" {
+    printf( "\\begin{verbatim}\n");
+    BEGIN PRE;
+}
+<PRE>[.*] {
+    printf( "%s", yytext );
+}
+
+<PRE>"</pre>" {
+    printf( "\n\\end{verbatim}\n");
+    BEGIN 0;
+}
+
+"<ol>" {
+    printf( "\\begin{enumerate}");
+    list_type = 0;
+    BEGIN OL;
+}
+"<ul>" {
+    printf( "\\begin{itemize}");
+    list_type = 1;
+    BEGIN UL;
+}
+<OL>"<li>" {
+    printf( "\\item ", yytext);
+    BEGIN LI;
+}
+<UL>"<li>" {
+    printf( "\\item ", yytext);
+    BEGIN LI;
+}
+<LI>[^<]* {
+    printf( "%s", yytext );
+}
+<LI>"</li>" {
+    if (list_type == 1)
+        BEGIN UL;
+    else
+        BEGIN OL;
+}
+<OL>"</ol>" {
+    printf( "\\end{enumerate}\n");
+    BEGIN 0;
+}
+<UL>"</ul>" {
+    printf( "\\end{itemize}\n");
+    BEGIN 0;
+}
+
+"<p>" {
+    BEGIN PARA;
+}
+<PARA>[^<]* {
+    printf( "%s", yytext );
+}
+<PARA>"<big>" {
+    printf( "{\\Large ", yytext );
+}
+<LI>"<big>" {
+    printf( "{\\Large ", yytext );
+}
+<PARA>"<small>" {
+    printf( "{\\scriptsize ", yytext );
+}
+<LI>"<small>" {
+    printf( "{\\scriptsize ", yytext );
+}
+<PARA>"<b>" {
+    printf( "\\textbf{", yytext );
+}
+<LI>"<b>" {
+    printf( "\\textbf{", yytext );
+}
+<PARA>"<i>" {
+    printf( "\\textit{", yytext );
+}
+<LI>"<i>" {
+    printf( "\\textit{", yytext );
+}
+<PARA>"<strong>" {
+    printf( "\\textmd{", yytext );
+}
+<LI>"<strong>" {
+    printf( "\\textmd{", yytext );
+}
+<PARA>"<em>" {
+    printf( "\\emph{", yytext );
+}
+<LI>"<em>" {
+    printf( "\\emph{", yytext );
+}
+<PARA>"<sup>" {
+    printf( "\\textsuperscript{", yytext );
+}
+<LI>"<sup>" {
+    printf( "\\textsuperscript{", yytext );
+}
+<PARA>"<sub>" {
+    printf( "\\textsubscript{", yytext );
+}
+<LI>"<sub>" {
+    printf( "\\textsubscript{", yytext );
+}
+
+<PARA>"</"(big|small|b|i|strong|em|sup|sub)">" {
+    printf( "}", yytext );
+}
+
+<LI>"</"(big|small|b|i|strong|em|sup|sub)">" {
+    printf( "}", yytext );
+}
+
+<PARA>"</p>" {
+    printf( " \\par\n");
+    BEGIN 0;
 }
 
 "<!--" {
@@ -92,6 +227,7 @@ int list_type;
 int main( int argc, const char *argv[] ) {
     printf( "\\documentclass[12pt]{article}\n" );
     printf( "\\usepackage{fixltx2e}\n" );
+    printf( "\\usepackage{itemized}\n" );
     printf( "\n" );
     printf( "\\setlength{\\parindent}{0.0in}\n" );
     printf( "\\setlength{\\parskip}{0.125in}\n" );

@@ -1,0 +1,50 @@
+<h1>CS302 Lecture notes -- NP Completeness</h1>
+<ul>
+<li> James S. Plank </li>
+<li> December 1, 2009.</li>
+<li> Latest revision: Dec  2 01:05:24 EST 2015</li>
+</ul>
+
+<p> This is not a complete treatment of NP-Completeness.  Like the Halting Problem
+lecture notes, they introduce you to a concept that you will see later in 
+your CS careers and will provide you with fodder for endless conversations
+around the family dinner table. </p>
+<p>
+As always, you can spend quite a bit of time reading Wikipedia on the 
+subject.This is not required reading, but (as of 2015) is a nice treatment of the topic.
+P, NP, NP-Complete and NP-Hard are sets of problems, defined as follows:</p>
+<ul>
+<li> <big>P</big>: problems whose solution is polynomial time in the size of their inputs.</li>
+<li> <big>NP</big>: problems whose solutions can be verified in polynomial time.(NP stands for non-deterministic polynomial time).</li>
+<li> <big>NP-Complete</big>: A collection of problems in NP whose solutions may or may not
+polynomial time.  We don't know.  However, if we can prove that one of them may be solved
+in polynomial time, then all of them can.</li>
+<li> <big>NP-Hard</big>: A collection of problems that are not in NP, whose solutions are at least as hard
+as the NP-Complete problems. </li>
+</ul>
+
+<p>In this lecture, we are going to see what it takes to prove that problems belong
+to these sets.  
+Suppose you have a problem to solve, and you want to know its complexity class.
+This takes two steps: </p>
+<ol>
+<li>1<sup>st</sup>Prove that it is in NP.  Typically the problem is couched as
+a <big>yes</big> or <big>no</big> problem involving a data structure, such 
+as ``does there exist a simple cycle through a
+given directed graph that visits all the nodes?''  
+To prove it is in NP, you need to show that 
+a <big>yes</big> solution can be checked in polynomial time.  
+In the above example, you can check to see if a given path through the graph
+is indeed a simple cycle in linear time.  Therefore, the problem is in 
+<big>NP</big>.  You don't have to prove anything about the <big>no</big> solutions,
+and you don't have to prove anything about how you'd calculate a solution.</li>
+<li>2<sup>st</sup><i>Transform a known NP-Complete problem to this one in polynomial time</i>.  
+Suppose the problem in question is <big>Q</big>,
+and that <big>L</big> is a well-known NP-Complete problem like 
+the <i>3-satisfiability</i> problem.  You need to show that if you have
+any instance of problem <big>L</big>, you can transform it into an instance
+of problem <big>Q</big> in polynomial time.  Thus, if you could solve problem
+<big>Q</big> in polynomial time, you could solve problem <big>L</big> in polynomial
+time. </li>
+</ol>
+
