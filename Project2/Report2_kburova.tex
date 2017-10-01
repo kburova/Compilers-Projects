@@ -1,0 +1,41 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+ \usepackage[letterpaper, margin=1in]{geometry}
+ \usepackage{amssymb}
+\usepackage{amsmath}
+ \usepackage{enumitem}
+\usepackage {listings}
+\usepackage{pgfplots}
+\usepgfplotslibrary{external}
+\usepackage{graphicx}
+
+\title{CS461 PA 2: HTML to Latex }
+\author{Ksenia Burova}
+\date{September 22nd, 2017}
+
+\begin{document}
+ 
+\maketitle
+
+\noindent {\bf Abstract:}\\
+In this programming assignment, the goal was to learn how to use the Lex lexical analyzer generator by creating a program that would convert html file to equivalent Latex file. The were 'comment', 'paragraph', 'ordered list, 'unordered list', and several other html tags matched using regular expressions and turned into Latex ones. \\
+
+\noindent {\bf Input / Output: }\\
+The input for the program is an {\bf .html}  file with a variety of tags, included nested ones.\\
+The output is a {\bf .tex} file that gets converted to a {\bf .pdf} aftermath.\\
+
+\noindent {\bf Programming approach:}\\
+I've started this lab by looking at the provided implementation of 'comment' tag. There was enough information hidden (nesting, reading all chars like they are and etc.) to apply it to the rest of the file scanning.
+
+\begin{itemize}
+	\item {\bf Design} \\
+	I tried to keep my solution consistent with provided implementation. I don't have much to say in this part, since the whole design was about identifying the correct set of regular expressions for lexical analysis. 
+	\item {\bf Testing:} \\
+	I tested my solutions by comparing my resulting pdfs to the ones provided: test, test1, test2.
+	\item {\bf Debugging:} \\
+	I've implemented my program by one tag match at the time, so it was easy to debug it. Any error that would occur would correspond to tag I was working on.
+	 \item {\bf Issues:} \\
+	The only issue with this assignment was was a lack of knowledge in Lex. But things could be guessed and tested easily. 
+\end{itemize}
+
+\end{document} 

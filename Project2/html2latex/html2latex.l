@@ -1,4 +1,11 @@
 %{
+
+/*****************************
+
+CS 461. PA2. Lexical Analysis.
+Completed by: Ksenia Burova
+
+******************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -40,118 +47,177 @@ int list_type;
 }
 
 "<pre>" {
+    /**************************************************************
+     * Matched preformatted paragraph. Start verbatim tag in Latex.
+     * ************************************************************/ 
     printf( "\\begin{verbatim}\n");
     BEGIN PRE;
 }
-<PRE>[.*] {
+<PRE>. {
+    /**************************************************************
+     * Read all chars as they are while in preformatted paragraph
+     * and print them.
+     * ************************************************************/ 
     printf( "%s", yytext );
 }
 
 <PRE>"</pre>" {
+    /**************************************************************
+     * Match closing for preformatted paragraph. Print closing tag
+     * in Latex.
+     * ************************************************************/ 
     printf( "\n\\end{verbatim}\n");
     BEGIN 0;
 }
 
 "<ol>" {
+    /**************************************************************
+     * Matched ordered list. Start enumerate tag in Latex. Set flag
+     * to 0 to identify where to return after <li>
+     * ************************************************************/ 
     printf( "\\begin{enumerate}");
     list_type = 0;
     BEGIN OL;
 }
 "<ul>" {
+    /**************************************************************
+     * Matched unordered list. Start itemize tag in Latex. Set flag
+     * to 1 to identify where to return after <li>
+     * ************************************************************/
     printf( "\\begin{itemize}");
     list_type = 1;
     BEGIN UL;
 }
 <OL>"<li>" {
-    printf( "\\item ", yytext);
+    /**************************************************************
+     * Matched item in ordered list. Start item tag in Latex. 
+     * ************************************************************/
+    printf( "\\item ");
     BEGIN LI;
 }
 <UL>"<li>" {
-    printf( "\\item ", yytext);
+    /**************************************************************
+     * Matched item in unordered list. Start item tag in Latex. 
+     * ************************************************************/
+    printf( "\\item ");
     BEGIN LI;
 }
-<LI>[^<]* {
-    printf( "%s", yytext );
-}
 <LI>"</li>" {
+    /**************************************************************
+     * Matched closing item tag. Return from item to unordered list
+     * or ordered one depending on flag, to close the tag.
+     * ************************************************************/
     if (list_type == 1)
         BEGIN UL;
     else
         BEGIN OL;
 }
 <OL>"</ol>" {
+    /**************************************************************
+     * Matched ordered list closing tag. Close enumerate in Latex.
+     * ************************************************************/
     printf( "\\end{enumerate}\n");
     BEGIN 0;
 }
 <UL>"</ul>" {
+    /**************************************************************
+     * Matched unordered list closing tag. Close itemize in Latex.
+     * ************************************************************/
     printf( "\\end{itemize}\n");
     BEGIN 0;
 }
 
 "<p>" {
+    /**************************************************************
+     * Matched paragraph tag. Start paragraph.
+     * ************************************************************/
     BEGIN PARA;
 }
-<PARA>[^<]* {
+
+<PARA,LI>[^<]* {
+    /**************************************************************
+     * Matched any chars but '<' in paragraph or list item. Print 
+     * to Latex doc
+     * ************************************************************/
     printf( "%s", yytext );
 }
-<PARA>"<big>" {
-    printf( "{\\Large ", yytext );
-}
-<LI>"<big>" {
-    printf( "{\\Large ", yytext );
-}
-<PARA>"<small>" {
-    printf( "{\\scriptsize ", yytext );
-}
-<LI>"<small>" {
-    printf( "{\\scriptsize ", yytext );
-}
-<PARA>"<b>" {
-    printf( "\\textbf{", yytext );
-}
-<LI>"<b>" {
-    printf( "\\textbf{", yytext );
-}
-<PARA>"<i>" {
-    printf( "\\textit{", yytext );
-}
-<LI>"<i>" {
-    printf( "\\textit{", yytext );
-}
-<PARA>"<strong>" {
-    printf( "\\textmd{", yytext );
-}
-<LI>"<strong>" {
-    printf( "\\textmd{", yytext );
-}
-<PARA>"<em>" {
-    printf( "\\emph{", yytext );
-}
-<LI>"<em>" {
-    printf( "\\emph{", yytext );
-}
-<PARA>"<sup>" {
-    printf( "\\textsuperscript{", yytext );
-}
-<LI>"<sup>" {
-    printf( "\\textsuperscript{", yytext );
-}
-<PARA>"<sub>" {
-    printf( "\\textsubscript{", yytext );
-}
-<LI>"<sub>" {
-    printf( "\\textsubscript{", yytext );
+
+<PARA,LI>"<big>" {
+    /**************************************************************
+     * Matched large font tag in paragraph or list item. Start 
+     * Large tag in Latex
+     * ************************************************************/
+    printf( "{\\Large " );
 }
 
-<PARA>"</"(big|small|b|i|strong|em|sup|sub)">" {
-    printf( "}", yytext );
+<PARA,LI>"<small>" {
+    /**************************************************************
+     * Matched small font tag in paragraph or list item. Start 
+     * scriptsize tag in Latex
+     * ************************************************************/
+    printf( "{\\scriptsize " );
 }
 
-<LI>"</"(big|small|b|i|strong|em|sup|sub)">" {
-    printf( "}", yytext );
+<PARA,LI>"<b>" {
+    /**************************************************************
+     * Matched bold font tag in paragraph or list item. Start 
+     * bold tag in Latex
+     * ************************************************************/
+    printf( "\\textbf{" );
+}
+
+<PARA,LI>"<i>" {
+    /**************************************************************
+     * Matched italic font tag in paragraph or list item. Start 
+     * italic tag in Latex
+     * ************************************************************/
+    printf( "\\textit{" );
+}
+
+<PARA,LI>"<strong>" {
+    /**************************************************************
+     * Matched strong font tag in paragraph or list item. Start 
+     * md tag in Latex
+     * ************************************************************/
+    printf( "\\textmd{" );
+}
+
+<PARA,LI>"<em>" {
+    /**************************************************************
+     * Matched emphasis font tag in paragraph or list item. Start 
+     * emphasis tag in Latex
+     * ************************************************************/
+    printf( "\\emph{" );
+}
+
+<PARA,LI>"<sup>" {
+    /**************************************************************
+     * Matched superscript tag in paragraph or list item. Start 
+     * superscript tag in Latex
+     * ************************************************************/
+    printf( "\\textsuperscript{" );
+}
+
+<PARA,LI>"<sub>" {
+    /**************************************************************
+     * Matched subscript tag in paragraph or list item. Start 
+     * subscript tag in Latex
+     * ************************************************************/
+    printf( "\\textsubscript{" );
+}
+
+<PARA,LI>"</"(big|small|b|i|strong|em|sup|sub)">" {
+    /**************************************************************
+     * Matched closing tag for all the above for list and paragraph.
+     * Close tags in Latex.
+     * ************************************************************/
+    printf( "}" );
 }
 
 <PARA>"</p>" {
+    /**************************************************************
+     * Matched closing paragraph tag. Indicate paragraph in Latex
+     * ************************************************************/
     printf( " \\par\n");
     BEGIN 0;
 }
@@ -227,7 +293,6 @@ int list_type;
 int main( int argc, const char *argv[] ) {
     printf( "\\documentclass[12pt]{article}\n" );
     printf( "\\usepackage{fixltx2e}\n" );
-    printf( "\\usepackage{itemized}\n" );
     printf( "\n" );
     printf( "\\setlength{\\parindent}{0.0in}\n" );
     printf( "\\setlength{\\parskip}{0.125in}\n" );
