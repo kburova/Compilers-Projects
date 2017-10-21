@@ -13,7 +13,8 @@ clear			 { return CLEAR; }
 			       return var; }
 
 [+\-*/=()%~&^|]  { return yytext[0]; }
-
+(<<)               { return LSHIFT; }
+(>>)				 { return RSHIFT;}
 [ \t\r\n]+		   ; //ignore white space
 
 .            	 { return yytext[0]; }		   	

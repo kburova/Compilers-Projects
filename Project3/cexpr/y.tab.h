@@ -40,16 +40,20 @@
       know about them.  */
    enum yytokentype {
      var = 258,
-     DUMP = 259,
-     CLEAR = 260,
-     NUM = 261
+     LSHIFT = 259,
+     RSHIFT = 260,
+     DUMP = 261,
+     CLEAR = 262,
+     NUM = 263
    };
 #endif
 /* Tokens.  */
 #define var 258
-#define DUMP 259
-#define CLEAR 260
-#define NUM 261
+#define LSHIFT 259
+#define RSHIFT 260
+#define DUMP 261
+#define CLEAR 262
+#define NUM 263
 
 
 
@@ -61,7 +65,7 @@ typedef union YYSTYPE
   int num;
 }
 /* Line 1529 of yacc.c.  */
-#line 65 "y.tab.h"
+#line 69 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

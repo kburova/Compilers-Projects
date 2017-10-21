@@ -1,5 +1,5 @@
 /*
- * This file defines an example yacc grammar for simple C expressions.
+ * This file defines an example yacc grammar for simple C sumessions.
  */
 
 %{
@@ -20,11 +20,11 @@ int yyerror( const char *s){
   int num;
 }
 
-%token var '+' '-' '*' '/' '=' '(' ')' DUMP CLEAR 
+%token var '+' '-' '*' '/' '=' '(' ')' LSHIFT RSHIFT '%' '^' '|' '&' DUMP CLEAR 
 
 %token <num> NUM
 
-%type <num> expr term factor equals assign
+%type <num> expr assign sum prod term
 
 %%
 commands:
@@ -32,34 +32,48 @@ commands:
 	;
 
 command	: expr ';'       { printf("%d\n", $1); }
-        | assign ';'     { printf("%d\n", $1); }
         | DUMP ';'       { for ( i = 0; i < 26; i++) printf("%c: %d\n", i+'a', vals[i]); }
         | CLEAR ';'      { for ( i = 0; i < 26; i++) vals[i] = 0; }
 	;
 
- assign   : var '+' equals { vals[$<num>1] += $3; $$ = vals[$<num>1]; }
-          | var '-' equals { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
-          | var equals     { vals[$<num>1] = $2; $$ = vals[$<num>1]; }
-          ;
+ expr   : var assign     { vals[$<num>1] = $2; $$ = vals[$<num>1]; }
+        | sum            { $$ = $1; }
+        ;
           
- equals : '=' equals    { $$ = $2; }
-        | '=' expr      { $$ = $2; }
-        ;
- expr   : term              {$$ = $1;}
-        | expr '+' term     {$$ = $1 + $3;}
-        | expr '-' term     {$$ = $1 - $3;}
-        ;
- term   : factor           {$$ = $1;}
-        | term '*' factor  {$$ = $1 * $3;}
-        | term '/' factor  {if ( $3 == 0 ) yyerror("divisionbyzero\n"); else $$ = $1 / $3;}
-        ;
- factor : NUM               {$$ = $1;}
-        | equals            {$$ = $1;}
-        | var               {$$ = vals[$<num>1];}
-        | '(' expr ')'      {$$ = $2;}
+ assign : '=' assign      { $$ = $2; }
+        | '+' '=' assign  { vals[$<num>1] += $3; $$ = vals[$<num>1]; }
+        | '=' '-' assign  { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
+        | '*' '=' assign  { vals[$<num>1] *= $3; $$ = vals[$<num>1]; }
+        | '=' '/' assign  { if ( $3 == 0 ) yyerror("divisionbyzero\n"); 
+                            else { vals[$<num>1] /= $3; 
+                                   $$ = vals[$<num>1]; }             }
+        | '=' '%' assign  { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
+        | '=' '^' assign  { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
+        | '=' '|' assign  { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
+        | '=' '&' assign  { vals[$<num>1] -= $3; $$ = vals[$<num>1]; }
+        | '=' RSHIFT assign { vals[$<num>1] >>= $3; $$ = vals[$<num>1]; }
+        | '=' LSHIFT assign { vals[$<num>1] <<= $3; $$ = vals[$<num>1]; }
+        | '=' expr        { $$ = $2; }
         ;
 
-                                                          
+ sum    : prod             {$$ = $1;}
+        | sum '+' prod     {$$ = $1 + $3;}
+        | sum '-' prod     {$$ = $1 - $3;}
+        ;
+
+ prod   : term           {$$ = $1;}
+        | prod '*' term  {$$ = $1 * $3;}
+        | prod '/' term  {if ( $3 == 0 ) yyerror("divisionbyzero\n"); else $$ = $1 / $3;}
+        | prod '%' term  {$$ = $1 % $3;}
+        ;
+
+ term   : NUM               {$$ = $1;}
+        | assign            {$$ = $1;}
+        | var               {$$ = vals[$<num>1];}
+        | '~' sum           {$$ = ~$2;}
+        | '-' sum           {$$ = -$2;}
+        | '(' sum ')'       {$$ = $2;}
+        ;
 %%
 
 int main()
