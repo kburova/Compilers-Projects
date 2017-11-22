@@ -1,10 +1,9 @@
+%{
 /*
  * CS461. Project 3.
  * Implementing grammar for calculator in C
  * Completed by : Ksenia Burova
- */
-
-%{
+*/
 #include <stdio.h>
 #include <limits.h>
 
@@ -20,7 +19,6 @@ int yyerror( const char *s){
 }
 
 /* I've used multiple sources to find calculations for overflow */
-
 int Overflow( int operation, int a, int b) {
 
   // do not output error message twice
@@ -74,6 +72,7 @@ int Overflow( int operation, int a, int b) {
   return 0;
 }
 
+//function that does opearation and assignment
 int operation(int val, int varName, int a, int b){
   
   switch (val){

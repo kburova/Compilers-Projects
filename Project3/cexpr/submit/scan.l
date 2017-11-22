@@ -1,4 +1,6 @@
 %{
+// Project 3. CS461. Regexes for parsing.
+// Written by: Ksenia Burova
 #include "y.tab.h"
 %}
 %%

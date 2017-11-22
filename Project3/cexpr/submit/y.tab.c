@@ -106,8 +106,13 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 7 "ex.y"
+#line 1 "cexpr.y"
 
+/*
+ * CS461. Project 3.
+ * Implementing grammar for calculator in C
+ * Completed by : Ksenia Burova
+*/
 #include <stdio.h>
 #include <limits.h>
 
@@ -123,7 +128,6 @@ int yyerror( const char *s){
 }
 
 /* I've used multiple sources to find calculations for overflow */
-
 int Overflow( int operation, int a, int b) {
 
   // do not output error message twice
@@ -177,6 +181,7 @@ int Overflow( int operation, int a, int b) {
   return 0;
 }
 
+//function that does opearation and assignment
 int operation(int val, int varName, int a, int b){
   
   switch (val){
@@ -262,13 +267,13 @@ int operation(int val, int varName, int a, int b){
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 142 "ex.y"
+#line 141 "cexpr.y"
 {
   int num;
   long lnum;
 }
 /* Line 193 of yacc.c.  */
-#line 272 "y.tab.c"
+#line 277 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -281,7 +286,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 285 "y.tab.c"
+#line 290 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -579,11 +584,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   155,   155,   156,   159,   160,   161,   164,   165,   168,
-     169,   170,   171,   172,   173,   174,   175,   176,   177,   178,
-     181,   182,   185,   186,   189,   190,   193,   194,   195,   198,
-     199,   200,   203,   204,   205,   211,   214,   215,   218,   219,
-     222,   223,   224,   227
+       0,   154,   154,   155,   158,   159,   160,   163,   164,   167,
+     168,   169,   170,   171,   172,   173,   174,   175,   176,   177,
+     180,   181,   184,   185,   188,   189,   192,   193,   194,   197,
+     198,   199,   202,   203,   204,   210,   213,   214,   217,   218,
+     221,   222,   223,   226
 };
 #endif
 
@@ -1527,157 +1532,157 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 159 "ex.y"
+#line 158 "cexpr.y"
     { if (!error) printf("%d\n", (yyvsp[(1) - (2)].num)); error = 0; }
     break;
 
   case 5:
-#line 160 "ex.y"
+#line 159 "cexpr.y"
     { for ( i = 0; i < 26; i++) printf("%c: %d\n", i+'a', vals[i]); }
     break;
 
   case 6:
-#line 161 "ex.y"
+#line 160 "cexpr.y"
     { for ( i = 0; i < 26; i++) vals[i] = 0; error = 0; }
     break;
 
   case 7:
-#line 164 "ex.y"
+#line 163 "cexpr.y"
     { if (!error) (yyval.num) = operation((yyvsp[(2) - (3)].num), (yyvsp[(1) - (3)].num), vals[(yyvsp[(1) - (3)].num)], (yyvsp[(3) - (3)].num)); }
     break;
 
   case 8:
-#line 165 "ex.y"
+#line 164 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 9:
-#line 168 "ex.y"
+#line 167 "cexpr.y"
     { (yyval.num) = 0; }
     break;
 
   case 10:
-#line 169 "ex.y"
+#line 168 "cexpr.y"
     { (yyval.num) = 1; }
     break;
 
   case 11:
-#line 170 "ex.y"
+#line 169 "cexpr.y"
     { (yyval.num) = 2; }
     break;
 
   case 12:
-#line 171 "ex.y"
+#line 170 "cexpr.y"
     { (yyval.num) = 3; }
     break;
 
   case 13:
-#line 172 "ex.y"
+#line 171 "cexpr.y"
     { (yyval.num) = 4; }
     break;
 
   case 14:
-#line 173 "ex.y"
+#line 172 "cexpr.y"
     { (yyval.num) = 5; }
     break;
 
   case 15:
-#line 174 "ex.y"
+#line 173 "cexpr.y"
     { (yyval.num) = 6; }
     break;
 
   case 16:
-#line 175 "ex.y"
+#line 174 "cexpr.y"
     { (yyval.num) = 7; }
     break;
 
   case 17:
-#line 176 "ex.y"
+#line 175 "cexpr.y"
     { (yyval.num) = 8; }
     break;
 
   case 18:
-#line 177 "ex.y"
+#line 176 "cexpr.y"
     { (yyval.num) = 9; }
     break;
 
   case 19:
-#line 178 "ex.y"
+#line 177 "cexpr.y"
     { (yyval.num) = 10;}
     break;
 
   case 20:
-#line 181 "ex.y"
+#line 180 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 21:
-#line 182 "ex.y"
+#line 181 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (3)].num) | (yyvsp[(3) - (3)].num); }
     break;
 
   case 22:
-#line 185 "ex.y"
+#line 184 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 23:
-#line 186 "ex.y"
+#line 185 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (3)].num) ^ (yyvsp[(3) - (3)].num); }
     break;
 
   case 24:
-#line 189 "ex.y"
+#line 188 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 25:
-#line 190 "ex.y"
+#line 189 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (3)].num) & (yyvsp[(3) - (3)].num); }
     break;
 
   case 26:
-#line 193 "ex.y"
+#line 192 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 27:
-#line 194 "ex.y"
+#line 193 "cexpr.y"
     { if ( !Overflow(3,(yyvsp[(1) - (3)].num),(yyvsp[(3) - (3)].num)) ) (yyval.num) = (yyvsp[(1) - (3)].num) << (yyvsp[(3) - (3)].num);}
     break;
 
   case 28:
-#line 195 "ex.y"
+#line 194 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (3)].num) >> (yyvsp[(3) - (3)].num);}
     break;
 
   case 29:
-#line 198 "ex.y"
+#line 197 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 30:
-#line 199 "ex.y"
+#line 198 "cexpr.y"
     { if ( !Overflow(0,(yyvsp[(1) - (3)].num),(yyvsp[(3) - (3)].num)) ) (yyval.num) = (yyvsp[(1) - (3)].num) + (yyvsp[(3) - (3)].num); }
     break;
 
   case 31:
-#line 200 "ex.y"
+#line 199 "cexpr.y"
     { if ( !Overflow(1,(yyvsp[(1) - (3)].num),(yyvsp[(3) - (3)].num)) ) (yyval.num) = (yyvsp[(1) - (3)].num) - (yyvsp[(3) - (3)].num); }
     break;
 
   case 32:
-#line 203 "ex.y"
+#line 202 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 33:
-#line 204 "ex.y"
+#line 203 "cexpr.y"
     { if ( !Overflow(2,(yyvsp[(1) - (3)].num),(yyvsp[(3) - (3)].num)) ) (yyval.num) = (yyvsp[(1) - (3)].num) * (yyvsp[(3) - (3)].num); }
     break;
 
   case 34:
-#line 205 "ex.y"
+#line 204 "cexpr.y"
     { if ( (yyvsp[(3) - (3)].num) == 0 ) { 
                               yyerror("dividebyzero");
                               } else {
@@ -1687,53 +1692,53 @@ yyreduce:
     break;
 
   case 35:
-#line 211 "ex.y"
+#line 210 "cexpr.y"
     { if ( !Overflow(5,(yyvsp[(1) - (3)].num),(yyvsp[(3) - (3)].num)) ) (yyval.num) = (yyvsp[(1) - (3)].num) % (yyvsp[(3) - (3)].num); }
     break;
 
   case 36:
-#line 214 "ex.y"
+#line 213 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 37:
-#line 215 "ex.y"
+#line 214 "cexpr.y"
     { if ( !Overflow(4,(yyvsp[(2) - (2)].num),0) ) (yyval.num) = -(yyvsp[(2) - (2)].num); }
     break;
 
   case 38:
-#line 218 "ex.y"
+#line 217 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num); }
     break;
 
   case 39:
-#line 219 "ex.y"
+#line 218 "cexpr.y"
     { (yyval.num) = ~(yyvsp[(2) - (2)].num); }
     break;
 
   case 40:
-#line 222 "ex.y"
+#line 221 "cexpr.y"
     { if((yyvsp[(1) - (1)].lnum) > INT_MAX || (yyvsp[(1) - (1)].lnum) < INT_MIN) yyerror("overflow"); else (yyval.num) = (yyvsp[(1) - (1)].lnum); }
     break;
 
   case 41:
-#line 223 "ex.y"
+#line 222 "cexpr.y"
     { (yyval.num) = vals[(yyvsp[(1) - (1)].num)];}
     break;
 
   case 42:
-#line 224 "ex.y"
+#line 223 "cexpr.y"
     { (yyval.num) = (yyvsp[(1) - (1)].num);}
     break;
 
   case 43:
-#line 227 "ex.y"
+#line 226 "cexpr.y"
     { (yyval.num) = (yyvsp[(2) - (3)].num);}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1737 "y.tab.c"
+#line 1742 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1947,7 +1952,7 @@ yyreturn:
 }
 
 
-#line 229 "ex.y"
+#line 228 "cexpr.y"
 
 
 int main()
