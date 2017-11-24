@@ -1,5 +1,8 @@
-double m[6]
-
 foo(int x, double y) {
-    return y;
+    
+    if ( x << y )
+        return 0;
+    
+    if ( y << y )
+        return 1;
 }

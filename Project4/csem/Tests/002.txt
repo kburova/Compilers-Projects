@@ -1,5 +1,6 @@
 foo(int x, double y) {
-    y &= x;
+    
+    x = y & x;
 
     x <<= 5;
 

@@ -1,0 +1,23 @@
+func foo
+formal 4
+formal 8
+bgnstmt 2
+t1 := param 1
+t2 := param 0
+t3 := @i t2
+t4 := @f t1
+t5 := cvi t4
+t6 := t5 &i t3
+t7 := cvf t6
+t8 := t1 =f t7
+bgnstmt 4
+t9 := param 0
+t10 := 5
+t11 := @i t9
+t12 := t11 <<i t10
+t13 := t9 =i t12
+bgnstmt 6
+t14 := param 0
+t15 := @i t14
+reti t15
+fend

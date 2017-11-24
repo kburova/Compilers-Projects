@@ -1,5 +1,7 @@
 foo(int x, double y) {
-    y = x;
+    double k;
+    k = 5;
+    y = k;
 
     return y;
 }

@@ -33,6 +33,7 @@ err=`diff tmp-$enum-err.txt tmp-$enum-test-err.txt | wc | awk '{ print $1 }'`
 
 if [ $out != 0 -o $err != 0 ]; then
   echo "Problem $enum is incorrect."
+  diff --text -y tmp-$enum-test-out.txt tmp-$enum-out.txt
   echo ""
 if [ $out != 0 ]; then
   echo "Your standard output does not match the correct one."
@@ -41,20 +42,8 @@ if [ $err != 0 ]; then
   echo "Your standard error does not match the correct one."
 fi
   echo ""
-  echo "TEST:"
-  echo ""
   echo "$call"
   echo ""
-  echo "FILES:"
-  echo ""
-  echo "Your standard output is in tmp-$enum-test-stdout.txt."
-  echo "Your standard error  is in tmp-$enum-test-stderr.txt."
-  echo ""
-  echo "The correct standard output is in tmp-$enum-correct-stdout.txt."
-  echo "The correct standard error  is in tmp-$enum-correct-stderr.txt."
-  echo ""
-  echo "Look at correct files and your files, perhaps run 'diff -y' on them, and figure out your mistake."
-  echo "Please remember to delete this files when you are finished."
 else
   echo "Problem $enum is correct."
   echo ""

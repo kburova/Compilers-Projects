@@ -1,6 +1,6 @@
 foo(int x, double y) {
     
-    y %= x;
+    x %= y;
     
     return y;
 }

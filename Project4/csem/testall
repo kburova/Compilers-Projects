@@ -11,7 +11,7 @@ fi
 enum=1
 n=0
 
-while [ $enum -le 20 ]; do
+while [ $enum -le 30 ]; do
   out=`$dir/testscript $enum  | head -n 1`
   echo $out
   n=`echo $n $out | awk '{ print $1 + ($NF == "correct.") }'`
@@ -22,4 +22,4 @@ while [ $enum -le 20 ]; do
   enum=`echo $enum | awk '{ print $1+1 }'`
 done
 echo ""
-echo "$n Correct out of 20"
+echo "$n Correct out of 30"

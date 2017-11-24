@@ -1,5 +1,5 @@
-double m[6]
-
-foo(int x, double y) {
-    return y;
+foo ( int a, int b ) {
+    if ( a && b ) {
+        return 1;
+    }
 }
