@@ -1,4 +1,3 @@
-# include <stdio.h>
 # include <stdlib.h> 
 # include "cc.h"
 # include "semutil.h"
@@ -109,7 +108,6 @@ void dobreak()
 {
     n();
 }
-
 /*
  * docontinue - continue statement
  */
@@ -119,13 +117,14 @@ void docontinue()
 }
 
 /*
- * :/startdodo - do statement
+ * startdodo - do statement
  */
 void dodo(int m1, int m2, struct sem_rec *e, int m3)
 {
     //backpatch(e, m2);
     backpatch(e->back.s_true, m1);
     backpatch(e->s_false, m3);
+   fprintf(stderr, "sem: docontinue not implemented\n");
 }
 
 /*
@@ -366,40 +365,6 @@ struct sem_rec *n()
     printf("br B%d\n", bplabel_num);
 
     return t;
-}
-
-/*
- * op1 - unary operators
- */
-struct sem_rec *op1(char *op, struct sem_rec *y)
-{
-    struct sem_rec *t;
-    char type = 'i';
-
-    // when dereference, type of new temp isn't an address any more
-    if ( *op == '@' && !(y->s_mode & T_ARRAY) ) {
-        y->s_mode &= ~T_ADDR;
-    }
-    
-    // see if type is double
-    if ( (y->s_mode & T_DOUBLE) && ( !(y->s_mode & T_ADDR) ) ) {
-        type = 'f';
-    }
-    
-    printf("t%d := %s%c t%d\n", nexttemp(), op, type, y->s_place);
-
-    t = node(currtemp(), y->s_mode, (struct sem_rec *) NULL, (struct sem_rec *) NULL);
-    
-    return t;
-}
-
-/*
- * op2 - arithmetic operators
- */
-struct sem_rec *op2(char *op, struct sem_rec *x, struct sem_rec *y)
-{
-    fprintf(stderr, "sem: op2 not implemented\n");
-    return ((struct sem_rec *) NULL);
 }
 
 /*
