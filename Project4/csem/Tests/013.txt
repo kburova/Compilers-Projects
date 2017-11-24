@@ -1,0 +1,8 @@
+double m[6]
+
+foo(int x, double y) {
+    int n;
+    
+    if (x > y) 
+        return m[2];
+}

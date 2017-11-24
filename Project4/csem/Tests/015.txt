@@ -1,0 +1,10 @@
+double m[6]
+
+foo(int x, double y) {
+    x = 5;
+    
+    do {
+        y += 1;
+        5 -= 1;
+    while ( x > 0 );
+}

@@ -1,0 +1,57 @@
+func scale
+formal 4
+formal 4
+bgnstmt 3
+t1 := 0
+t2 := param 1
+ Deref in id() ,  ------------------
+t3 := @i t2
+t4 := t3 []f t1
+t5 := 1
+t6 := param 1
+ Deref in id() ,  ------------------
+t7 := @i t6
+t8 := t7 []f t5
+ Deref in op1() , y ------------------
+t9 := @f t8
+bgnstmt 4
+t10 := 1
+t11 := param 0
+ Deref in id() ,  ------------------
+t12 := @i t11
+t13 := t12 []i t10
+t14 := 2
+t15 := param 1
+ Deref in id() ,  ------------------
+t16 := @i t15
+t17 := t16 []f t14
+ Deref in op1() , y ------------------
+t18 := @f t17
+bgnstmt 5
+t19 := 2
+t20 := param 1
+ Deref in id() ,  ------------------
+t21 := @i t20
+t22 := t21 []f t19
+t23 := 2
+t24 := param 0
+ Deref in id() ,  ------------------
+t25 := @i t24
+t26 := t25 []i t23
+ Deref in op1() , y ------------------
+t27 := @i t26
+bgnstmt 6
+t28 := param 0
+ Deref in id() ,  ------------------
+t29 := @i t28
+t30 := param 0
+ Deref in id() ,  ------------------
+t31 := @i t30
+t32 := @i t31
+bgnstmt 8
+t33 := param 0
+ Deref in id() ,  ------------------
+t34 := @i t33
+t35 := @i t34
+reti t35
+fend

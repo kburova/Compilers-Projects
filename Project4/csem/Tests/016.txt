@@ -1,0 +1,9 @@
+foo(int x, double y) {
+    int i;
+    for ( i = 0; i < 5; i += 1 ){
+        
+        if (i == 0)
+            continue;
+        y >>= 1;
+    }
+}

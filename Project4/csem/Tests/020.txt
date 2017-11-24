@@ -1,0 +1,5 @@
+foo(int x, double y) {
+
+    if ( x >> 5 & 1) 
+        return y;
+}

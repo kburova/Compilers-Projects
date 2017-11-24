@@ -1,0 +1,9 @@
+foo(int x, double y[]) {
+    
+    while (x > 0) {
+        y[x] = 3;
+        x /= 2;
+    }
+
+    return y;
+}

@@ -1,0 +1,5 @@
+double m[6]
+
+foo(int x, double y) {
+    return y;
+}

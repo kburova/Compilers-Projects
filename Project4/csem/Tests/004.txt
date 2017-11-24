@@ -1,0 +1,6 @@
+foo(int x, double y) {
+    
+    x %= y;
+
+    return y;
+}

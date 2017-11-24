@@ -1,0 +1,25 @@
+#!/bin/sh 
+
+dir=`pwd`
+ge="$dir/Tests"
+
+if [ $# -ne 0 ]; then
+echo 'usage: testall' >&2
+exit 1
+fi
+
+enum=1
+n=0
+
+while [ $enum -le 20 ]; do
+  out=`$dir/testscript $enum  | head -n 1`
+  echo $out
+  n=`echo $n $out | awk '{ print $1 + ($NF == "correct.") }'`
+
+  rm -f tmp-???-test-copy.txt tmp-???-test.txt tmp-???-correct.txt tmp-???-out.txt \
+       tmp-???-err.txt tmp-???-test-out.txt tmp-???-test-err.txt
+  
+  enum=`echo $enum | awk '{ print $1+1 }'`
+done
+echo ""
+echo "$n Correct out of 20"

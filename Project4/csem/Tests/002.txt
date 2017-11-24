@@ -1,0 +1,7 @@
+foo(int x, double y) {
+    y &= x;
+
+    x <<= 5;
+
+    return x;
+}

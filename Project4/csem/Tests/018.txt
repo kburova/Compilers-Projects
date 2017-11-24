@@ -1,0 +1,6 @@
+foo(int x, double y) {
+    
+    x |= 5;
+    x &= y;
+    y ^= 11;
+}

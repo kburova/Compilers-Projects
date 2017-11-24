@@ -1,0 +1,7 @@
+foo(int x[], double y[]) {
+    
+    x[4] *= 7;
+    y[3] += x[4];
+    
+    return y;
+}
